@@ -1,0 +1,25 @@
+users:
+
+	-id_user
+	-nom_user
+	-prenom_user
+	-pseudo_user
+	-mdp_user
+	-mail_user
+
+articles :
+	
+	-id_article
+	-titre_article
+	-date_article
+	-contenu_article
+	-auteur_article
+
+commentaires:
+	
+	-id_comm
+	-id_article
+	-id_user
+	-pseudo_user
+	-contenu_comm
+	-date_comm

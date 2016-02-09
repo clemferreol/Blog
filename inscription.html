@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script>
+        $(function () {
+            $('form').submit(function () {
+                $('#blocErreur').html('');
+                $.ajax({
+                    url: 'inscription_verif.php',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    dataType: 'json',
+                    success: function(data){
+                        var toPrint = 'Nom : '+data.user.nom+'<br>';
+                        toPrint += 'Prénom : '+data.user.prenom+'<br>';
+                        toPrint += 'Pseudo : '+data.user.pseudo+'<br>';
+                        toPrint += 'Email : '+data.user.mail+'<br>';
+                        $('#blocSuccess').html(toPrint);
+                        //SetTimeOut et redirection
+                    },
+                    error: function(data, status, error) {
+                        var toPrint = '';
+
+                        data = JSON.parse(data.responseText);
+                        for(var d in data.errors){
+                            toPrint += d+' :'+data.errors[d]+'<br>';
+                        }
+                        $('#blocErreur').html(toPrint);
+                    }
+                });
+
+                return false;
+            });
+        });
+    </script>
+</head>
+<body>
+<form>
+    <input type="text" placeholder="Nom" name="nom" required><span id=""></span><br><br>
+    <input type="text" placeholder="Prénom" name="prenom" required><br><br>
+    <input type="text" placeholder="Pseudo" name="pseudo" required><br><br>
+    <input type="mail" name="mail" placeholder="mail@supinternet.fr" required><br><br>
+    <input type="password" name="pwd"placeholder="Password" required><br />
+    <input type="password" name="pwd2" placeholder="Verif" required><br><br>
+    <input type="submit">
+</form>
+<div id="blocErreur"></div>
+<div id="blocSuccess"></div>
+
+
+</body>
+</html>
