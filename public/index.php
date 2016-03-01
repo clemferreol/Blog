@@ -1,30 +1,43 @@
 <?php
+require_once("../utils/init.php");
 
-$controller_name = "user";
-$action_name = "formlogin";
+$called_url = $_SERVER['REQUEST_URI'];
+$url_composants = explode("/",$called_url,4);
 
-$class_name = ucfirst($controller_name."Controller");
+if(isset($url_composants[1])){
+  if(strlen($url_composants[1]) ==0){
+    $controller_name = "index";
+  }else{
+    $controller_name = $url_composants[1];
+  }
 
-$controller_file = "../controller/".$class_name.".php";
-
-//CHECK CLASS EXIST
-if(!file_exists($controller_file)){
-    $controller_file = "../Controller/errorController.php";
-    $class_name = "ErrorController";
-    $action_name = "notFoundAction";
+}else{
+  $controller_name = "index";
+}
+if(isset($url_composants[2])){
+  $action_name = $url_composants[2];
+}else{
+  $action_name = "index";
 }
 
-require_once($controller_file);
-$controller = new $class_name();
+$class_name = ucfirst($controller_name)
+                   ."Controller";
 
-//CHECK METHOD EXIST
+global $pdo;
+try{
+  $controller = new $class_name($pdo);
+}catch(Exception $e){
+  $controller = new ErrorController($pdo);
+}
+
 $action = strtolower($action_name)."Action";
 if(!method_exists($controller,$action)){
-    $controller_file = "../Controller/errorController.php";
-    require_once($controller_file);
-    $action = "notFoundAction";
-    $controller = new errorController();
+  $controller = new ErrorController($pdo);
+  $action = "e404";
 }
+
 $result = $controller->$action();
 
-echo $result;
+if(is_string($result)){
+  echo $result;
+}

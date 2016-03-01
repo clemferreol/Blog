@@ -1,7 +1,7 @@
 <?php
 
-class ErrorController{
-    public function notFoundAction(){
-        echo"ERREUR 404 MAGGLE";
-    }
+class ErrorController extends AbstractController{
+  public function e404(){
+    return "BOUH RIEN TROUVÉ !";
+  }
 }
